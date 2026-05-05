@@ -1,0 +1,22 @@
+services:
+  flask-app:
+    build: ./app
+    container_name: quote-flask
+    restart: unless-stopped
+    networks:
+      - app-net
+  nginx:
+    image: nginx:alpine
+    container_name: quote-nginx
+    ports:
+      - "9090:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - flask-app
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
